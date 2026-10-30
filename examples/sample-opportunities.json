@@ -1,0 +1,30 @@
+[
+  {
+    "title": "AI for Social Good Accelerator — Example",
+    "url": "https://example.org/accelerator",
+    "source": "Example feed",
+    "category": "accelerator",
+    "relevance": 94,
+    "eligibility": 85,
+    "credibility": 90,
+    "deadline": "2026-12-01",
+    "geography": "Germany / EU",
+    "summary": "Illustrative accelerator for early-stage AI products with a social impact focus.",
+    "score": 90,
+    "priority": "high"
+  },
+  {
+    "title": "Regional Product Meetup — Example",
+    "url": "https://example.org/event",
+    "source": "Example feed",
+    "category": "event",
+    "relevance": 72,
+    "eligibility": 100,
+    "credibility": 85,
+    "deadline": null,
+    "geography": "Stuttgart, Germany",
+    "summary": "Illustrative local networking event for founders and product builders.",
+    "score": 83,
+    "priority": "high"
+  }
+]
