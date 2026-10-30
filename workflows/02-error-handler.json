@@ -1,0 +1,80 @@
+{
+  "name": "AI Opportunity Intelligence Hub — Error Handler",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "error-trigger",
+      "name": "On workflow error",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e = $json.execution || {}; const wf = $json.workflow || {}; return [{ json: { workflow: wf.name || 'unknown', executionId: e.id || null, executionUrl: e.url || null, lastNode: e.lastNodeExecuted || null, errorMessage: e.error?.message || 'Unknown workflow error', stack: e.error?.stack || null, failedAt: new Date().toISOString() } }];"
+      },
+      "id": "normalize-error",
+      "name": "Normalize failure context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -150,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { text: ':rotating_light: *n8n workflow failure*\\nWorkflow: ' + $json.workflow + '\\nNode: ' + $json.lastNode + '\\nError: ' + $json.errorMessage + '\\nExecution: ' + ($json.executionUrl || 'not available') } }}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "notify-error",
+      "name": "Notify operations channel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "On workflow error": {
+      "main": [
+        [
+          {
+            "node": "Normalize failure context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize failure context": {
+      "main": [
+        [
+          {
+            "node": "Notify operations channel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "pinData": {}
+}
